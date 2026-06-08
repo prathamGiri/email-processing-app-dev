@@ -1,10 +1,13 @@
 const express = require('express');
+const cors = require('cors')
 const registerRouter = require('./Routes/register');
 const loginRouter = require('./Routes/login');
 const app = express();
 
-app.use(loginRouter, '/login');
-app.use(registerRouter, '/register');
+app.use(cors());
+app.use(express.json());
+app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 
 app.get('/', (req, res) => {
     console.log('Request received');
@@ -12,5 +15,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(3000, ()=>{
-    console.log('Listening on port 8080');
+    console.log('Listening on port 3000');
 })
