@@ -119,6 +119,26 @@
 
 <script>
 
+    async function login_submit(username, password){
+        const response = await fetch(
+            "/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            }
+        )
+
+        const data = await response.json();
+
+        console.log(data);
+    }
+
 const tabs=document.querySelectorAll(".tab");
 
 function showLogin(){
