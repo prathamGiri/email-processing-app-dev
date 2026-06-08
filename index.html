@@ -91,11 +91,11 @@
     <div id="loginForm">
         <h2>Login</h2>
 
-        <form>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
+        <form onsubmit="login_submit(event)">
+            <input type="email" id="login_email" placeholder="Email" required>
+            <input type="password" id="login_password" placeholder="Password" required>
 
-            <button class="submit">
+            <button class="submit" type="submit">
                 Sign In
             </button>
         </form>
@@ -104,12 +104,12 @@
     <div id="registerForm" class="hidden">
         <h2>Register</h2>
 
-        <form>
-            <input type="text" placeholder="Full Name" required>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
+        <form onsubmit="register_submit(event)">
+            <input type="text" id="register_name" placeholder="Full Name" required>
+            <input type="email" id="register_email" placeholder="Email" required>
+            <input type="password" id="register_password" placeholder="Password" required>
 
-            <button class="submit">
+            <button class="submit" type="submit" >
                 Create Account
             </button>
         </form>
@@ -118,18 +118,45 @@
 </div>
 
 <script>
-
-    async function login_submit(username, password){
+    async function register_submit(event){
+        event.preventDefault();
+        var fullname = document.getElementById('register_name').value;
+        var username = document.getElementById('register_email').value;
+        var password = document.getElementById('register_password').value;
         const response = await fetch(
-            "/login",
+            "http://localhost:3000/register",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    username,
-                    password
+                    "fullname": fullname,
+                    "user": username,
+                    "pass": password
+                })
+            }
+        )
+
+        const data = await response.json();
+
+        console.log(data);
+    }
+
+    async function login_submit(event){
+        event.preventDefault();
+        var username = document.getElementById('login_email').value;
+        var password = document.getElementById('login_password').value;
+        const response = await fetch(
+            "http://localhost:3000/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "user": username,
+                    "pass": password
                 })
             }
         )
