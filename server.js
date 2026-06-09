@@ -6,8 +6,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/register', registerRouter);
 
 app.get('/', (req, res) => {
     console.log('Request received');
