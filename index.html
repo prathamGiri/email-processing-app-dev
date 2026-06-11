@@ -121,7 +121,7 @@
     async function register_submit(event){
         event.preventDefault();
         var fullname = document.getElementById('register_name').value;
-        var username = document.getElementById('register_email').value;
+        var email = document.getElementById('register_email').value;
         var password = document.getElementById('register_password').value;
         const response = await fetch(
             "/api/register",
@@ -132,8 +132,8 @@
                 },
                 body: JSON.stringify({
                     "fullname": fullname,
-                    "user": username,
-                    "pass": password
+                    "email": email,
+                    "password": password
                 })
             }
         )
@@ -155,8 +155,8 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    "user": username,
-                    "pass": password
+                    "email": username,
+                    "password": password
                 })
             }
         )
