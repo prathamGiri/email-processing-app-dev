@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 router.post('/', async (req, res) => {
     try{
-        const {email, pass} = req.body;
+        const {email, password} = req.body;
         const result = await pool.query(
             `SELECT id, email, password_hash FROM users WHERE email = $1`,
             [email]
@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
         }
         
         if (result.rowCount == 1) {
-            const valid = await bcrypt.compare(pass, result.rows[0].password_hash);
+            const valid = await bcrypt.compare(password, result.rows[0].password_hash);
             if(valid){
                 return res.json({"message" : "Login Successful"});
             }
