@@ -1,13 +1,22 @@
+require('dotenv').config();
 const express = require('express');
+const pool = require('./config/db');
 const cors = require('cors')
+
 const registerRouter = require('./Routes/register');
 const loginRouter = require('./Routes/login');
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
+
+app.get('/health/db', async (req, res) => {
+    var result = await pool.query('SELECT NOW()');
+    res.json(result.rows);
+})
 
 app.get('/', (req, res) => {
     console.log('Request received');
