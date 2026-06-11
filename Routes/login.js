@@ -8,15 +8,14 @@ router.post('/', async (req, res) => {
         const {email, pass} = req.body;
         const result = await pool.query(
             `SELECT id, email, password_hash FROM users WHERE email = $1`,
-            [email, pass]
+            [email]
         )
         if (result.rowCount == 0) {
             return res.json({"message" : "No Such Account Created"});
         }
         
         if (result.rowCount == 1) {
-            const pass_hash = await bcrypt.hash(pass, 10);
-            const valid = await bcrypt.compare(pass_hash, result.rows[0].password_hash);
+            const valid = await bcrypt.compare(pass, result.rows[0].password_hash);
             if(valid){
                 return res.json({"message" : "Login Successful"});
             }
