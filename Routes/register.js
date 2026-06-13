@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
         const pass_hash = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
-            `SELECT * FROM users WHERE email == $1`,
+            `SELECT * FROM users WHERE email = $1`,
             [email]
         )
         if (result.rowCount > 0) {
