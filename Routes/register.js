@@ -17,18 +17,14 @@ router.post('/', async (req, res) => {
         if (result.rowCount > 0) {
             return res.json({"message" : "Email already taken!"});
         }
-        const otp = () => {
-            let curr = '';
-            for (let i = 0; i < 6; i++) {
-                curr=curr+Math.floor(Math.random()*10);
-            }
-            return curr;
-        };
-        const result = await pool.query(
+        const otp = Math.floor(
+            100000 + Math.random() * 900000
+        );
+        const insertToUsers= await pool.query(
             `INSERT INTO otp (name, email, password_hash, otp) VALUES ($1, $2, $3, $4)`,
             [fullname, email, pass_hash, otp]
         );
-        if (result.rowCount == 1) {
+        if (insertToUsers.rowCount == 1) {
             const subject = "OTP Verification";
             const body = `the otp is : ${otp}`
             const email_status = sendEmail(email, subject, body);
