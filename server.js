@@ -5,6 +5,7 @@ const cors = require('cors')
 
 const registerRouter = require('./Routes/register');
 const loginRouter = require('./Routes/login');
+const verifyOtpRouter = require('./Routes/verify_otp');
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
+app.use('/api/verify_otp', verifyOtpRouter);
 
 app.get('/health/db', async (req, res) => {
     var result = await pool.query('SELECT NOW()');
