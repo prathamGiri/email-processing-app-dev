@@ -141,11 +141,16 @@
         const data = await response.json();
 
         console.log(data);
+
+        if(data.message == "OTP Sent"){
+            sessionStorage.setItem("email", email);
+            window.location.href = "/otp_verify.html";
+        }
     }
 
     async function login_submit(event){
         event.preventDefault();
-        var username = document.getElementById('login_email').value;
+        var email = document.getElementById('login_email').value;
         var password = document.getElementById('login_password').value;
         const response = await fetch(
             "/api/login",
@@ -155,7 +160,7 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    "email": username,
+                    "email": email,
                     "password": password
                 })
             }

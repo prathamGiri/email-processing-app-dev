@@ -84,19 +84,19 @@
     <h2>Email Verification</h2>
 
     <p>
-        Enter the OTP sent to your email.
+        Enter the OTP sent to <b><span id="email-text"></span></b>.
     </p>
 
     <div class="otp-box">
-        <input maxlength="1">
-        <input maxlength="1">
-        <input maxlength="1">
-        <input maxlength="1">
-        <input maxlength="1">
-        <input maxlength="1">
+        <input id="in1" maxlength="1">
+        <input id="in2" maxlength="1">
+        <input id="in3" maxlength="1">
+        <input id="in4" maxlength="1">
+        <input id="in5" maxlength="1">
+        <input id="in6" maxlength="1">
     </div>
 
-    <button>
+    <button onclick="verifyOtp(event)">
         Verify OTP
     </button>
 
@@ -107,4 +107,74 @@
 </div>
 
 </body>
+<script>
+    const email = sessionStorage.getItem("email");
+    document.getElementById("email-text").textContent = email;
+    
+
+    const otpInputs = document.querySelectorAll('.otp-box input');
+    otpInputs.forEach((input, index) => {
+
+        input.addEventListener('input', () => {
+            if (
+                input.value.length === 1 &&
+                index < otpInputs.length - 1
+            ) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'Backspace' &&
+                input.value === '' &&
+                index > 0
+            ) {
+                otpInputs[index - 1].focus();
+            }
+        });
+
+    });
+
+
+    const verifyOtp = async (e) => {
+        e.preventDefault();
+        const otp = document.getElementById('in1').value +
+                    document.getElementById('in2').value + 
+                    document.getElementById('in3').value + 
+                    document.getElementById('in4').value + 
+                    document.getElementById('in5').value + 
+                    document.getElementById('in6').value;
+
+        try{
+            const result = await fetch(
+                '/api/verify_otp',
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "email": email,
+                        "otp": otp
+                    })
+                }
+            )
+            if (result.ok) {
+                const data = await result.json();
+                if(data.message === "OTP Verified"){
+                    sessionStorage.removeItem('email');
+                    window.location.href = "/home.html";
+                }
+            } else {
+                alert("OTP verification failed");
+            }
+        }catch(err){
+            console.log(err);
+            alert("Server Error");
+        }
+
+        
+    }
+</script>
 </html>
