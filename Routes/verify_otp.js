@@ -8,25 +8,24 @@ router.post('/', async (req, res) => {
 
     console.log("Received OTP:", otp);
 
-    const result = await pool.query(
+    const getOTP = await pool.query(
         `SELECT * FROM otp WHERE email = $1`,
         [email]
     );
-    if (result.rowCount == 0) {
+    if (getOTP.rowCount == 0) {
         return res.json({
             message: "OTP Expired"
         });
     }
-    if (otp === result.rows[0].otp) {
-        const result = await pool.query(
+    if (otp === getOTP.rows[0].otp) {
+        const insertToUsers = await pool.query(
             `INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)`,
-            [result.rows[0].name, result.rows[0].email, result.rows[0].password_hash]
+            [getOTP.rows[0].name, getOTP.rows[0].email, getOTP.rows[0].password_hash]
         )
-        if (result.rowCount > 0) {
+        if (insertToUsers.rowCount > 0) {
             return res.json({"message":"OTP Verified"})
         }
     }
-
     return res.status(400).json({
         message: "Invalid OTP"
     });
