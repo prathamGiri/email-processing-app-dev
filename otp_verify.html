@@ -108,6 +108,11 @@
 
 </body>
 <script>
+    window.onload = () =>{
+        if(!sessionStorage.getItem("email")){
+            window.location.href = "/index.html";
+        }
+    }
     const email = sessionStorage.getItem("email");
     document.getElementById("email-text").textContent = email;
     
@@ -163,6 +168,7 @@
             if (result.ok) {
                 const data = await result.json();
                 if(data.message === "OTP Verified"){
+                    localStorage.setItem("token", data.token);
                     sessionStorage.removeItem('email');
                     window.location.href = "/home.html";
                 }

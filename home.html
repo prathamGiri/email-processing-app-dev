@@ -158,7 +158,11 @@
     </div>
 
     <script>
-
+        window.onload = () =>{
+            if(!localStorage.getItem("token")){
+                window.location.href = "/index.html";
+            }
+        }
         async function loadDashboard() {
 
             try {
@@ -182,9 +186,7 @@
         }
 
         function logout() {
-
             localStorage.removeItem('token');
-
             window.location.href = '/index.html';
         }
 

@@ -118,6 +118,12 @@
 </div>
 
 <script>
+    window.onload = () =>{
+        if(localStorage.getItem("token")){
+            window.location.href = "/home.html";
+        }
+    }
+
     async function register_submit(event){
         event.preventDefault();
         var fullname = document.getElementById('register_name').value;
@@ -170,6 +176,7 @@
 
         console.log(data);
         if(data.message == "Login Successful"){
+            localStorage.setItem("token", data.token);
             window.location.href = "/home.html";
         }
     }
