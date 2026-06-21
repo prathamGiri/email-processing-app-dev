@@ -23,7 +23,17 @@ router.post('/', async (req, res) => {
             [getOTP.rows[0].name, getOTP.rows[0].email, getOTP.rows[0].password_hash]
         )
         if (insertToUsers.rowCount > 0) {
-            return res.json({"message":"OTP Verified"})
+            const token = jwt.sign(
+                {
+                    userId: insertToUsers.rows[0].id,
+                    email: insertToUsers.rows[0].email
+                },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: process.env.JWT_EXPIRES_IN
+                }
+            );
+            return res.json({"message":"OTP Verified", "token":token})
         }
     }
     return res.status(400).json({
