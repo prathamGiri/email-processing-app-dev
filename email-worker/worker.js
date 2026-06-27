@@ -1,9 +1,9 @@
-const consumer = require('./kafka/consumer');
+const {consumer, consumerConnect} = require('./kafka/consumer');
 const sendEmail = require('./utils/sendEmail');
 
 async function start() {
 
-    await consumer.connect();
+    await consumerConnect()
 
     await consumer.subscribe({
         topic: 'email-jobs'
