@@ -29,6 +29,7 @@ async function start() {
                 }
 
             });
+            break;
         }catch(err){
             console.log("Kafka not ready yet...");
             console.log(err.message);
