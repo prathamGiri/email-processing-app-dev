@@ -2,33 +2,40 @@ const {consumer, consumerConnect} = require('./kafka/consumer');
 const sendEmail = require('./utils/sendEmail');
 
 async function start() {
+    while (true) {
+        try{
+            await consumerConnect()
 
-    await consumerConnect()
+            await consumer.subscribe({
+                topic: 'email-jobs'
+            });
 
-    await consumer.subscribe({
-        topic: 'email-jobs'
-    });
+            console.log("Worker listening...");
 
-    console.log("Worker listening...");
+            await consumer.run({
 
-    await consumer.run({
+                eachMessage: async ({ message }) => {
 
-        eachMessage: async ({ message }) => {
+                    const job =
+                        JSON.parse(message.value.toString());
 
-            const job =
-                JSON.parse(message.value.toString());
+                    console.log(job);
 
-            console.log(job);
+                    await sendEmail(
+                        job.email,
+                        job.subject,
+                        job.body
+                    );
+                }
 
-            await sendEmail(
-                job.email,
-                job.subject,
-                job.body
-            );
+            });
+        }catch(err){
+            console.log("Kafka not ready yet...");
+            console.log(err.message);
+
+            await new Promise(resolve => setTimeout(resolve, 5000));
         }
-
-    });
-
+    }
 }
 
 start();
