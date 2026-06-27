@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../config/db');
 const router = express.Router();
 const {producer} = require('../kafka/producer');
+const jwt = require('jsonwebtoken');
 
 router.post('/', async (req, res) => {
 
