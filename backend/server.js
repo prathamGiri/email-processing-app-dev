@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const pool = require('./config/db');
 const cors = require('cors')
-const producer = require('./kafka/producer');
+const {producerConnect} = require('./kafka/producer');
 
 
 const registerRouter = require('./Routes/register');
@@ -29,9 +29,8 @@ app.get('/', (req, res) => {
 
 async function startServer() {
     try {
-        await producer.connect();
-        console.log("Kafka producer connected");
-
+        await producerConnect();
+        
         app.listen(3000, () => {
             console.log("Listening on port 3000");
         });

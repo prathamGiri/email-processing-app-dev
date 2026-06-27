@@ -7,4 +7,16 @@ const kafka = new Kafka({
 
 const producer = kafka.producer();
 
-module.exports = producer;
+const producerConnect = async () => {
+    while (true) {
+        try {
+            await producer.connect();
+            console.log("Kafka connected");
+            break;
+        } catch (err) {
+            console.log("Waiting for Kafka...");
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+    }
+}
+module.exports = {producer, producerConnect};
