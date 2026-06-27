@@ -21,10 +21,14 @@ router.post('/', async (req, res) => {
     }
     if (otp === getOTP.rows[0].otp) {
         const insertToUsers = await pool.query(
-            `INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)`,
+            `INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, email`,
             [getOTP.rows[0].name, getOTP.rows[0].email, getOTP.rows[0].password_hash]
         )
         if (insertToUsers.rowCount > 0) {
+            await pool.query(
+                `DELETE FROM otp WHERE email = $1`,
+                [email]
+            );
             const token = jwt.sign(
                 {
                     userId: insertToUsers.rows[0].id,

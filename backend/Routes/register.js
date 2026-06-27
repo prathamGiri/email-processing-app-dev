@@ -18,16 +18,6 @@ router.post('/', async (req, res) => {
         if (result.rowCount > 0) {
             return res.json({"message" : "Email already taken!"});
         }
-        const emailInOtpTable = await pool.query(
-            `SELECT * FROM otp WHERE email = $1`,
-            [email]
-        )
-        if (emailInOtpTable.rowCount > 0) {
-            await pool.query(
-                'DELETE FROM otp WHERE email = $1',
-                [email]
-            )
-        }
         const otp = (
             Math.floor(100000 + Math.random() * 900000)
         ).toString();
