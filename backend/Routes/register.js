@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const pool = require('../config/db');
 // const sendEmail = require('../../email-worker/utils/sendEmail');
 const router = express.Router();
-const producer = require('../kafka/producer');
+const {producer} = require('../kafka/producer');
 
 router.post('/', async (req, res) => {
     try{

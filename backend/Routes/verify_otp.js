@@ -1,7 +1,7 @@
 const express = require('express');
 const pool = require('../config/db');
 const router = express.Router();
-const producer = require('../kafka/producer');
+const {producer} = require('../kafka/producer');
 
 router.post('/', async (req, res) => {
 
