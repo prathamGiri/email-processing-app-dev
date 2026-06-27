@@ -3,6 +3,9 @@ const express = require('express');
 const pool = require('./config/db');
 const cors = require('cors')
 
+const producer = require('../kafka/producer');
+await producer.connect();
+
 const registerRouter = require('./Routes/register');
 const loginRouter = require('./Routes/login');
 const verifyOtpRouter = require('./Routes/verify_otp');

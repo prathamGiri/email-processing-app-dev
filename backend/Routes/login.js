@@ -3,6 +3,7 @@ const pool = require('../config/db');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const producer = require('../kafka/producer');
 
 router.post('/', async (req, res) => {
     try{
@@ -28,6 +29,21 @@ router.post('/', async (req, res) => {
                         expiresIn: process.env.JWT_EXPIRES_IN
                     }
                 );
+                const subject = "Login Successful";
+                const body = `Welcome Back`;
+                // const email_status = sendEmail(email, subject, body);
+                await producer.send({
+                    topic: 'email-jobs',
+                    messages: [
+                        {
+                            value: JSON.stringify({
+                                email,
+                                subject,
+                                body
+                            })
+                        }
+                    ]
+                });
                 return res.json({"message" : "Login Successful", "token":token});
             }
             return res.json({"message" : "Incorrect Username or Password"});

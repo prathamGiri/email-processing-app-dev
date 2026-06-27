@@ -1,8 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const pool = require('../config/db');
-const sendEmail = require('../utils/sendEmail');
+const sendEmail = require('../../email-worker/utils/sendEmail');
 const router = express.Router();
+const producer = require('../kafka/producer');
 
 router.post('/', async (req, res) => {
     try{
@@ -27,9 +28,9 @@ router.post('/', async (req, res) => {
                 [email]
             )
         }
-        const otp = Math.floor(
-            100000 + Math.random() * 900000
-        );
+        const otp = (
+            Math.floor(100000 + Math.random() * 900000)
+        ).toString();
         const insertToUsers= await pool.query(
             `INSERT INTO otp (name, email, password_hash, otp) VALUES ($1, $2, $3, $4)`,
             [fullname, email, pass_hash, otp]
@@ -37,10 +38,20 @@ router.post('/', async (req, res) => {
         if (insertToUsers.rowCount == 1) {
             const subject = "OTP Verification";
             const body = `the otp is : ${otp}`
-            const email_status = sendEmail(email, subject, body);
-            if ((await email_status).accepted.includes(email)) {
-                return res.json({"message":"OTP Sent"});
-            }
+            // const email_status = sendEmail(email, subject, body);
+            await producer.send({
+                topic: 'email-jobs',
+                messages: [
+                    {
+                        value: JSON.stringify({
+                            email,
+                            subject,
+                            body
+                        })
+                    }
+                ]
+            });
+            return res.json({"message":"Email Queued!"});
         }
         res.json({"message":"Registration unsuccessful"});
     }catch (err){
