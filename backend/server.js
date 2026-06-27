@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const pool = require('./config/db');
 const cors = require('cors')
-const producer = require('../kafka/producer');
+const producer = require('./kafka/producer');
 
 
 const registerRouter = require('./Routes/register');
