@@ -118,7 +118,7 @@
     <div class="container">
 
         <div class="welcome">
-            <h1>Welcome, Pratham 👋</h1>
+            <h1>Welcome, Pratham</h1>
             <p>
                 Manage your email campaigns and monitor delivery status.
             </p>
@@ -163,34 +163,11 @@
                 window.location.href = "/index.html";
             }
         }
-        async function loadDashboard() {
-
-            try {
-
-                const response = await fetch('/api/dashboard');
-
-                const data = await response.json();
-
-                document.getElementById('sentCount').textContent =
-                    data.sent;
-
-                document.getElementById('pendingCount').textContent =
-                    data.pending;
-
-                document.getElementById('failedCount').textContent =
-                    data.failed;
-
-            } catch(err) {
-                console.error(err);
-            }
-        }
 
         function logout() {
             localStorage.removeItem('token');
             window.location.href = '/index.html';
         }
-
-        loadDashboard();
 
     </script>
 
