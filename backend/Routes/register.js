@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const pool = require('../config/db');
-const sendEmail = require('../../email-worker/utils/sendEmail');
+// const sendEmail = require('../../email-worker/utils/sendEmail');
 const router = express.Router();
 const producer = require('../kafka/producer');
 
