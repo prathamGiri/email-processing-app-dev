@@ -148,7 +148,7 @@
 
         console.log(data);
 
-        if(data.message == "OTP Sent"){
+        if(data.message == "Email Queued!"){
             sessionStorage.setItem("email", email);
             window.location.href = "/otp_verify.html";
         }
